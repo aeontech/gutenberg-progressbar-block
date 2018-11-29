@@ -1,11 +1,6 @@
 <?php
 /**
- * Blocks Initializer
- *
- * Enqueue CSS/JS of all the blocks.
- *
- * @since   1.0.0
- * @package CGB
+ * Enqueue JS for all the blocks.
  */
 
 // Exit if accessed directly.
@@ -14,11 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Enqueue Gutenberg block assets for both frontend + backend.
- *
- * `wp-blocks`: includes block type registration and related functions.
- *
- * @since 1.0.0
+ * Enqueue Gutenberg block assets for frontend.
  */
 function progressbar_cgb_block_assets() {
 	// We will not enqueue our frontend script in the admin panel
@@ -38,12 +29,6 @@ add_action( 'enqueue_block_assets', 'progressbar_cgb_block_assets' );
 
 /**
  * Enqueue Gutenberg block assets for backend editor.
- *
- * `wp-blocks`: includes block type registration and related functions.
- * `wp-element`: includes the WordPress Element abstraction for describing the structure of your blocks.
- * `wp-i18n`: To internationalize the block's text.
- *
- * @since 1.0.0
  */
 function progressbar_cgb_editor_assets() {
 	wp_enqueue_script(
