@@ -52,7 +52,7 @@ registerBlockType( 'shane/progressbar-semicircle', {
 		},
 		showPercentage: {
 			type: 'boolean',
-			default: true
+			default: true,
 		},
 		color: {
 			type: 'string',
@@ -67,13 +67,13 @@ registerBlockType( 'shane/progressbar-semicircle', {
 		},
 	},
 
-	edit: new BlockEdit( "semicircle" ),
+	edit: new BlockEdit( 'semicircle' ),
 
 	save: function( props ) {
 		const {
 			attributes: {
 				width,
-                height,
+				height,
 				value,
 				type,
 				animation,
@@ -84,16 +84,16 @@ registerBlockType( 'shane/progressbar-semicircle', {
 				alignment,
 				uuid,
 			},
-			className
+			className,
 		} = props;
 
 		return (
 			<div
-				id={ `pb-${uuid}` }
+				id={ `pb-${ uuid }` }
 				className={ className }
 				data-progressbar="semicircle"
 				data-width={ width }
-                data-height={ height }
+				data-height={ height }
 				data-value={ value }
 				data-type={ type }
 				data-animation={ animation }

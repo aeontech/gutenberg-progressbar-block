@@ -52,7 +52,7 @@ registerBlockType( 'shane/progressbar-line', {
 		},
 		showPercentage: {
 			type: 'boolean',
-			default: true
+			default: true,
 		},
 		color: {
 			type: 'string',
@@ -67,13 +67,13 @@ registerBlockType( 'shane/progressbar-line', {
 		},
 	},
 
-	edit: new BlockEdit( "line" ),
+	edit: new BlockEdit( 'line' ),
 
 	save: function( props ) {
 		const {
 			attributes: {
 				width,
-                height,
+				height,
 				value,
 				type,
 				animation,
@@ -84,16 +84,16 @@ registerBlockType( 'shane/progressbar-line', {
 				alignment,
 				uuid,
 			},
-			className
+			className,
 		} = props;
 
 		return (
 			<div
-				id={ `pb-${uuid}` }
+				id={ `pb-${ uuid }` }
 				className={ className }
 				data-progressbar="line"
 				data-width={ width }
-                data-height={ height }
+				data-height={ height }
 				data-value={ value }
 				data-type={ type }
 				data-animation={ animation }

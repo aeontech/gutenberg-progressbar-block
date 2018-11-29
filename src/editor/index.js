@@ -1,4 +1,3 @@
-import ProgressBar from 'progressbar.js';
 import { default as initPb } from '../frontend/index';
 import { default as Registry } from '../frontend/ProgressBarRegistry';
 
@@ -21,24 +20,24 @@ const {
 	ToggleControl,
 } = wp.components;
 
-var DOMLoaded = false;
+let DOMLoaded = false;
 
 function Editor( shape ) {
 	class BlockEdit extends Component {
 		componentDidMount() {
-			var pb = null
-			let node = document.querySelector('#block-' + this.props.clientId + ' [data-progressbar]');
+			let pb = null;
+			const node = document.querySelector( '#block-' + this.props.clientId + ' [data-progressbar]' );
 
 			// This is how we will get our 'pb'
 			addAction( 'item.added', 'pb-' + this.props.clientId, ( inst ) => {
-				let nodeId = inst.node.getAttribute( 'id' );
-				if ( nodeId !== `pb-${this.props.clientId}` ) {
+				const nodeId = inst.node.getAttribute( 'id' );
+				if ( nodeId !== `pb-${ this.props.clientId }` ) {
 					return;
 				}
 
 				pb = inst.inst;
 
-				let value = this.props.attributes.value;
+				const value = this.props.attributes.value;
 				this.updateValue( value );
 
 				removeAction( 'item.added', 'pb-' + this.props.clientId );
@@ -46,54 +45,57 @@ function Editor( shape ) {
 
 			// Create handlers for attribute changes
 			const update = ( key, value ) => {
-				pb._progressPath._opts[key] =
-				pb._opts[key] = value;
-			}
+				pb._progressPath._opts[ key ] =
+				pb._opts[ key ] = value;
+			};
 
 			this.updateWidth = ( value ) => {
-				node.style['width']  = `${value}px`;
+				node.style.width = `${ value }px`;
 
 				if ( undefined === this.props.attributes.height ) {
-					node.style['height'] = `${value}px`;
+					node.style.height = `${ value }px`;
 				}
 			};
 			this.updateHeight = ( value ) => {
 				if ( undefined !== this.props.attributes.height ) {
-					node.style['height'] = `${value}px`;
+					node.style.height = `${ value }px`;
 				}
 			};
-			this.updateValue    = ( value ) => {
+			this.updateValue = ( value ) => {
 				pb.set( value );
 				update( 'value', value );
 				this.updatePercentage( value );
-			}
+			};
 			this.updateDuration = value => update( 'duration', value );
-			this.updateEasing   = value => update( 'easing', value );
-			this.updateColor    = value => {
-				update( 'color', value )
+			this.updateEasing = value => update( 'easing', value );
+			this.updateColor = value => {
+				update( 'color', value );
 				pb.path.setAttribute( 'stroke', value );
-				pb.text == undefined ? null: pb.text.style['color'] = value;
+
+				if ( pb.text === undefined ) {
+					pb.text.style.color = value;
+				}
 			};
 			this.updateAlignment = value => {
-				let margin = [ 0, 0, 0, 0 ];
+				const margin = [ 0, 0, 0, 0 ];
 
 				if ( [ 'left', 'center' ].includes( value ) ) {
-					margin[1] = 'auto';
+					margin[ 1 ] = 'auto';
 				}
 				if ( [ 'right', 'center' ].includes( value ) ) {
-					margin[3] = 'auto';
+					margin[ 3 ] = 'auto';
 				}
 
-				node.style['margin'] = margin.join( ' ' );
+				node.style.margin = margin.join( ' ' );
 			};
 			this.updatePercentage = value => {
 				if ( this.props.attributes.showPercentage ) {
-					let progress = Math.round( pb.value() * 100 )
+					const progress = Math.round( value * 100 );
 					pb.setText( progress + '%' );
 				} else {
 					pb.setText( '' );
 				}
-			}
+			};
 
 			// If DOMContentLoaded has already fired, we will manually call
 			// for initialization of the progressbar.
@@ -105,7 +107,9 @@ function Editor( shape ) {
 		}
 
 		componentDidUpdate() {
-			if ( ! DOMLoaded ) return;
+			if ( ! DOMLoaded ) {
+				return;
+			}
 
 			this.updateWidth( this.props.attributes.width );
 			this.updateHeight( this.props.attributes.height );
@@ -117,7 +121,7 @@ function Editor( shape ) {
 		}
 
 		componentWillUnmount() {
-			Registry.remove( `pb-${this.props.attributes.uuid}` );
+			Registry.remove( `pb-${ this.props.attributes.uuid }` );
 		}
 
 		render() {
@@ -133,58 +137,56 @@ function Editor( shape ) {
 					color,
 					showPercentage,
 					alignment,
-					uuid,
 				},
-				attributes,
 				className,
-				setAttributes
+				setAttributes,
 			} = this.props;
 
 			// A few quick event handlers
-			const setWidth = value => setAttributes( { width: value } );
-			const setHeight = value => setAttributes( { height: value } );
-			const setValue = value => setAttributes( { value: value / 100 } );
-			const setType = value => setAttributes( { type: value } );
-			const setAnimation = value => setAttributes( { animation: value } );
-			const setDuration = value => setAttributes( { duration: value } );
-			const setEasing = value => setAttributes( { easing: value } );
-			const setColor = value => setAttributes( { color: value.hex } );
-			const setPercentage = value => setAttributes( { showPercentage: value } );
-			const setAlignment = value => setAttributes( { alignment: value } );
+			const setWidth = val => setAttributes( { width: val } );
+			const setHeight = val => setAttributes( { height: val } );
+			const setValue = val => setAttributes( { value: val / 100 } );
+			const setType = val => setAttributes( { type: val } );
+			const setAnimation = val => setAttributes( { animation: val } );
+			const setDuration = val => setAttributes( { duration: val } );
+			const setEasing = val => setAttributes( { easing: val } );
+			const setColor = val => setAttributes( { color: val.hex } );
+			const setPercentage = val => setAttributes( { showPercentage: val } );
+			const setAlignment = val => setAttributes( { alignment: val } );
 
 			setAttributes( { uuid: this.props.clientId } );
 
 			// The attributes to output on the div
-			let nodeAttributes = {
-				'id': `pb-${this.props.clientId}`,
-				'className': className,
+			const nodeAttributes = {
+				id: `pb-${ this.props.clientId }`,
+				className: className,
 				'data-progressbar': shape,
 				'data-width': width,
 				'data-height': height,
 				'data-value': value,
 				'data-type': type,
-				'data-animation': "click",
+				'data-animation': 'click',
 				'data-duration': duration,
 				'data-easing': easing,
 				'data-color': color,
 				'data-percentage': showPercentage,
 				'data-align': alignment,
-			}
+			};
 
 			// If we don't use a height, don't add one to attributes
 			if ( undefined === height ) {
-				delete nodeAttributes['data-height'];
+				delete nodeAttributes[ 'data-height' ];
 			}
 
 			return ( [
-				<BlockControls>
+				<BlockControls key={ 0 }>
 					<BlockAlignmentToolbar
 						value={ alignment }
 						onChange={ setAlignment }
 						controls={ [ 'left', 'center', 'right' ] }
 					/>
 				</BlockControls>,
-				<InspectorControls>
+				<InspectorControls key={ 1 }>
 					<PanelBody title={ __( 'ProgressBar Settings', 'aeontech' ) }>
 						<RangeControl
 							label={ __( 'Width', 'aeontech' ) }
@@ -221,8 +223,8 @@ function Editor( shape ) {
 							] }
 							onChange={ setType }
 						/>
-						{ type && type == 'dynamic' && ( [
-							<SelectControl
+						{ type && type === 'dynamic' && ( [
+							<SelectControl key={ 0 }
 								label={ __( 'Animation Trigger', 'aeontech' ) }
 								value={ animation }
 								options={ [
@@ -232,8 +234,8 @@ function Editor( shape ) {
 								] }
 								onChange={ setAnimation }
 							/>,
-							<SelectControl
-								label={ __('Animation Easing', 'aeontech' ) }
+							<SelectControl key={ 1 }
+								label={ __( 'Animation Easing', 'aeontech' ) }
 								value={ easing }
 								options={ [
 									{ label: __( 'Linear', 'aeontech' ), value: 'linear' },
@@ -274,14 +276,14 @@ function Editor( shape ) {
 								] }
 								onChange={ setEasing }
 							/>,
-							<RangeControl
-								label={ __('Animation Duration (ms)', 'aeontech' ) }
+							<RangeControl key={ 2 }
+								label={ __( 'Animation Duration (ms)', 'aeontech' ) }
 								value={ duration }
 								onChange={ setDuration }
 								min={ 0 }
 								max={ 10 * 1000 }
 								step={ 100 }
-							/>
+							/>,
 						] ) }
 						<ColorPicker
 							label={ __( 'Color', 'aeontech' ) }
@@ -296,7 +298,7 @@ function Editor( shape ) {
 						/>
 					</PanelBody>
 				</InspectorControls>,
-				<div { ...nodeAttributes } />
+				<div key={ 2 } { ...nodeAttributes } />,
 			] );
 		}
 	}
@@ -304,6 +306,6 @@ function Editor( shape ) {
 	return BlockEdit;
 }
 
-document.addEventListener( 'DOMContentLoaded', e => DOMLoaded = true );
+document.addEventListener( 'DOMContentLoaded', () => DOMLoaded = true );
 
 export default Editor;

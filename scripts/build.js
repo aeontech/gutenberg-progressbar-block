@@ -1,9 +1,10 @@
 /**
+ * eslint no-console: 0
  * Build
  *
  * The create-guten-block CLI builds here.
  */
-
+/* eslint no-console: 0 */
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.
@@ -19,7 +20,6 @@ process.on( 'unhandledRejection', err => {
 
 // Modules.
 const fs = require( 'fs' );
-const ora = require( 'ora' );
 const path = require( 'path' );
 const chalk = require( 'chalk' );
 const webpack = require( 'webpack' );
@@ -50,9 +50,6 @@ const getFileSize = filePath => {
 };
 
 clearConsole();
-
-// Init the spinner.
-const spinner = new ora( { text: '' } );
 
 /**
  * Build function
