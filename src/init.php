@@ -21,18 +21,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 function progressbar_cgb_block_assets() {
+	// We will not enqueue our frontend script in the admin panel
+	if ( is_admin() ) {
+		return;
+	}
+
 	wp_enqueue_script(
 		'progressbar-cgb-frontend-js',
 		plugins_url( '/dist/frontend.build.js', dirname( __file__ ) ),
 		array( 'wp-hooks' )
-		,filemtime( plugin_dir_path( __DIR__ ) . 'dist/frontend.build.js' )
-	);
-
-	wp_enqueue_style(
-		'progressbar-cgb-style-css',
-		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ),
-		array( 'wp-blocks' )
-		,filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' )
+		,filemtime( plugin_dir_path( __DIR__ ) . 'dist/frontend.build.js' ),
+		true
 	);
 }
 add_action( 'enqueue_block_assets', 'progressbar_cgb_block_assets' );
@@ -53,13 +52,6 @@ function progressbar_cgb_editor_assets() {
 		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-hooks' ),
 		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ),
 		true
-	);
-
-	wp_enqueue_style(
-		'progressbar-cgb-block-editor-css',
-		plugins_url( 'dist/blocks.editor.build.css', dirname( __FILE__ ) ),
-		array( 'wp-edit-blocks' )
-		,filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' )
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'progressbar_cgb_editor_assets' );
