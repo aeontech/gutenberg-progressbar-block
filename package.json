@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "lint":  "node node_modules/.bin/eslint --ignore-path .gitignore ."
   },
   "dependencies": {
     "autoprefixer": "^7.2.4",
