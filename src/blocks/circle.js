@@ -26,6 +26,10 @@ registerBlockType( 'shane/progressbar-circle', {
 			type: 'number',
 			default: 150,
 		},
+		strokeWidth: {
+			type: 'number',
+			default: 4,
+		},
 		value: {
 			type: 'number',
 			default: 0.5,
@@ -54,6 +58,14 @@ registerBlockType( 'shane/progressbar-circle', {
 			type: 'string',
 			default: '#4682B4',
 		},
+		textColor: {
+			type: 'string',
+			default: '#555555',
+		},
+		textSize: {
+			type: 'number',
+			default: 22,
+		},
 		alignment: {
 			type: 'string',
 			default: 'center',
@@ -69,12 +81,15 @@ registerBlockType( 'shane/progressbar-circle', {
 		const {
 			attributes: {
 				width,
+				strokeWidth,
 				value,
 				type,
 				animation,
 				duration,
 				easing,
 				color,
+				textColor,
+				textSize,
 				showPercentage,
 				alignment,
 				uuid,
@@ -88,12 +103,15 @@ registerBlockType( 'shane/progressbar-circle', {
 				className={ className }
 				data-progressbar="circle"
 				data-width={ width }
+				data-stroke={ strokeWidth }
 				data-value={ value }
 				data-type={ type }
 				data-animation={ animation }
 				data-duration={ duration }
 				data-easing={ easing }
 				data-color={ color }
+				data-textcolor={ textColor }
+				data-textsize={ textSize }
 				data-percentage={ showPercentage }
 				data-align={ alignment }
 			/>

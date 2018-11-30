@@ -31,13 +31,28 @@ function initiatePb( node ) {
 	const type = node.getAttribute( 'data-progressbar' );
 	const width = node.getAttribute( 'data-width' );
 	const height = node.getAttribute( 'data-height' );
+	const strokeWidth = node.getAttribute( 'data-stroke' );
 	const duration = node.getAttribute( 'data-duration' );
 	const easing = node.getAttribute( 'data-easing' );
 	const color = node.getAttribute( 'data-color' );
-	const strokeWidth = 3;
+	const textColor = node.getAttribute( 'data-textcolor' );
+	const textSize = node.getAttribute( 'data-textsize' );
+	const alignment = node.getAttribute( 'data-align' );
 
 	node.style.width = width + 'px';
 	node.style.height = ( height === null ? width : height ) + 'px';
+
+	// Align Node
+	const margin = [ 0, 0, 0, 0 ];
+
+	if ( [ 'left', 'center' ].includes( alignment ) ) {
+		margin[ 1 ] = 'auto';
+	}
+	if ( [ 'right', 'center' ].includes( alignment ) ) {
+		margin[ 3 ] = 'auto';
+	}
+
+	node.style.margin = margin.join( ' ' );
 
 	inst = new ProgressBar[ {
 		line: 'Line',
@@ -49,6 +64,18 @@ function initiatePb( node ) {
 		duration: parseInt( duration ),
 		easing,
 		warnings: false,
+		text: {
+			style: {
+				color: textColor,
+				fontSize: `${ textSize }px`,
+				position: 'absolute',
+				left: '50%',
+				top: '50%',
+				padding: '0px',
+				margin: '0px',
+				transform: 'translate(-50%, -50%)',
+			},
+		},
 
 		// And on step we will update the text
 		step: function( state ) {

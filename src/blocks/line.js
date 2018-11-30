@@ -30,6 +30,10 @@ registerBlockType( 'shane/progressbar-line', {
 			type: 'number',
 			default: 50,
 		},
+		strokeWidth: {
+			type: 'number',
+			default: 4,
+		},
 		value: {
 			type: 'number',
 			default: 0.5,
@@ -58,6 +62,14 @@ registerBlockType( 'shane/progressbar-line', {
 			type: 'string',
 			default: '#4682B4',
 		},
+		textColor: {
+			type: 'string',
+			default: '#555555',
+		},
+		textSize: {
+			type: 'number',
+			default: 22,
+		},
 		alignment: {
 			type: 'string',
 			default: 'center',
@@ -74,12 +86,15 @@ registerBlockType( 'shane/progressbar-line', {
 			attributes: {
 				width,
 				height,
+				strokeWidth,
 				value,
 				type,
 				animation,
 				duration,
 				easing,
 				color,
+				textColor,
+				textSize,
 				showPercentage,
 				alignment,
 				uuid,
@@ -94,12 +109,15 @@ registerBlockType( 'shane/progressbar-line', {
 				data-progressbar="line"
 				data-width={ width }
 				data-height={ height }
+				data-stroke={ strokeWidth }
 				data-value={ value }
 				data-type={ type }
 				data-animation={ animation }
 				data-duration={ duration }
 				data-easing={ easing }
 				data-color={ color }
+				data-textcolor={ textColor }
+				data-textsize={ textSize }
 				data-percentage={ showPercentage }
 				data-align={ alignment }
 			/>

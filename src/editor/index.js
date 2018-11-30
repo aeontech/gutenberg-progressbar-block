@@ -61,6 +61,10 @@ function Editor( shape ) {
 					node.style.height = `${ value }px`;
 				}
 			};
+			this.updateStroke = ( value ) => {
+				update( 'strokeWidth', value );
+				pb.path.setAttribute( 'stroke-width', value );
+			};
 			this.updateValue = ( value ) => {
 				pb.set( value );
 				update( 'value', value );
@@ -68,15 +72,23 @@ function Editor( shape ) {
 			};
 			this.updateDuration = value => update( 'duration', value );
 			this.updateEasing = value => update( 'easing', value );
-			this.updateColor = value => {
+			this.updateColor = ( value ) => {
 				update( 'color', value );
 				pb.path.setAttribute( 'stroke', value );
-
-				if ( pb.text === undefined ) {
-					pb.text.style.color = value;
-				}
 			};
-			this.updateAlignment = value => {
+			this.updateTextColor = ( value ) => {
+				pb._progressPath._opts.text.style.color =
+				pb._opts.text.style.color = value;
+
+				pb.text.style.color = value;
+			};
+			this.updateTextSize = ( value ) => {
+				pb._progressPath._opts.text.style.fontSize =
+				pb._opts.text.style.fontSize = `${ value }px`;
+
+				pb.text.style.fontSize = `${ value }px`;
+			};
+			this.updateAlignment = ( value ) => {
 				const margin = [ 0, 0, 0, 0 ];
 
 				if ( [ 'left', 'center' ].includes( value ) ) {
@@ -88,7 +100,7 @@ function Editor( shape ) {
 
 				node.style.margin = margin.join( ' ' );
 			};
-			this.updatePercentage = value => {
+			this.updatePercentage = ( value ) => {
 				if ( this.props.attributes.showPercentage ) {
 					const progress = Math.round( value * 100 );
 					pb.setText( progress + '%' );
@@ -113,9 +125,12 @@ function Editor( shape ) {
 
 			this.updateWidth( this.props.attributes.width );
 			this.updateHeight( this.props.attributes.height );
+			this.updateStroke( this.props.attributes.strokeWidth );
 			this.updateDuration( this.props.attributes.duration );
 			this.updateEasing( this.props.attributes.easing );
 			this.updateColor( this.props.attributes.color );
+			this.updateTextColor( this.props.attributes.textColor );
+			this.updateTextSize( this.props.attributes.textSize );
 			this.updateAlignment( this.props.attributes.alignment );
 			this.updateValue( this.props.attributes.value );
 		}
@@ -129,12 +144,15 @@ function Editor( shape ) {
 				attributes: {
 					width,
 					height,
+					strokeWidth,
 					value,
 					type,
 					animation,
 					duration,
 					easing,
 					color,
+					textColor,
+					textSize,
 					showPercentage,
 					alignment,
 				},
@@ -145,12 +163,15 @@ function Editor( shape ) {
 			// A few quick event handlers
 			const setWidth = val => setAttributes( { width: val } );
 			const setHeight = val => setAttributes( { height: val } );
+			const setStroke = val => setAttributes( { strokeWidth: val } );
 			const setValue = val => setAttributes( { value: val / 100 } );
 			const setType = val => setAttributes( { type: val } );
 			const setAnimation = val => setAttributes( { animation: val } );
 			const setDuration = val => setAttributes( { duration: val } );
 			const setEasing = val => setAttributes( { easing: val } );
 			const setColor = val => setAttributes( { color: val.hex } );
+			const setTextColor = val => setAttributes( { textColor: val.hex } );
+			const setTextSize = val => setAttributes( { textSize: val } );
 			const setPercentage = val => setAttributes( { showPercentage: val } );
 			const setAlignment = val => setAttributes( { alignment: val } );
 
@@ -163,12 +184,15 @@ function Editor( shape ) {
 				'data-progressbar': shape,
 				'data-width': width,
 				'data-height': height,
+				'data-stroke': strokeWidth,
 				'data-value': value,
 				'data-type': type,
 				'data-animation': 'click',
 				'data-duration': duration,
 				'data-easing': easing,
 				'data-color': color,
+				'data-textcolor': textColor,
+				'data-textsize': textSize,
 				'data-percentage': showPercentage,
 				'data-align': alignment,
 			};
@@ -187,7 +211,7 @@ function Editor( shape ) {
 					/>
 				</BlockControls>,
 				<InspectorControls key={ 1 }>
-					<PanelBody title={ __( 'ProgressBar Settings', 'aeontech' ) }>
+					<PanelBody title={ __( 'Output', 'aeontech' ) } initialOpen={ true }>
 						<RangeControl
 							label={ __( 'Width', 'aeontech' ) }
 							value={ width }
@@ -223,7 +247,48 @@ function Editor( shape ) {
 							] }
 							onChange={ setType }
 						/>
-						{ type && type === 'dynamic' && ( [
+						<ToggleControl
+							label={ __( 'Display Percentage', 'aeontech' ) }
+							checked={ showPercentage }
+							onChange={ setPercentage }
+						/>
+					</PanelBody>
+					<PanelBody title={ __( 'Stroke', 'aeontech' ) } initialOpen={ false }>
+						<RangeControl
+							label={ __( 'Stroke Width', 'aeontech' ) }
+							value={ strokeWidth }
+							onChange={ setStroke }
+							min={ 1 }
+							max={ 10 }
+							step={ 1 }
+						/>
+						<ColorPicker
+							label={ __( 'Bar Color', 'aeontech' ) }
+							color={ color }
+							onChangeComplete={ setColor }
+							disableAlpha
+						/>
+					</PanelBody>
+					{ showPercentage &&
+						<PanelBody title={ __( 'Text', 'aeontech' ) } initialOpen={ false }>
+							<RangeControl
+								label={ __( 'Text Size', 'aeontech' ) }
+								value={ textSize }
+								onChange={ setTextSize }
+								min={ 10 }
+								max={ 36 }
+								step={ 1 }
+							/>
+							<ColorPicker
+								label={ __( 'Text Color', 'aeontech' ) }
+								color={ textColor }
+								onChangeComplete={ setTextColor }
+								disableAlpha
+							/>
+						</PanelBody>
+					}
+					{ type && type === 'dynamic' && (
+						<PanelBody title={ __( 'Animations', 'aeontech' ) } initialOpen={ false }>
 							<SelectControl key={ 0 }
 								label={ __( 'Animation Trigger', 'aeontech' ) }
 								value={ animation }
@@ -233,7 +298,7 @@ function Editor( shape ) {
 									{ label: __( 'On Click', 'aeontech' ), value: 'click' },
 								] }
 								onChange={ setAnimation }
-							/>,
+							/>
 							<SelectControl key={ 1 }
 								label={ __( 'Animation Easing', 'aeontech' ) }
 								value={ easing }
@@ -275,7 +340,7 @@ function Editor( shape ) {
 									{ label: __( 'Ease To', 'aeontech' ), value: 'easeTo' },
 								] }
 								onChange={ setEasing }
-							/>,
+							/>
 							<RangeControl key={ 2 }
 								label={ __( 'Animation Duration (ms)', 'aeontech' ) }
 								value={ duration }
@@ -283,20 +348,9 @@ function Editor( shape ) {
 								min={ 0 }
 								max={ 10 * 1000 }
 								step={ 100 }
-							/>,
-						] ) }
-						<ColorPicker
-							label={ __( 'Color', 'aeontech' ) }
-							color={ color }
-							onChangeComplete={ setColor }
-							disableAlpha
-						/>
-						<ToggleControl
-							label={ __( 'Display Percentage', 'aeontech' ) }
-							checked={ showPercentage }
-							onChange={ setPercentage }
-						/>
-					</PanelBody>
+							/>
+						</PanelBody>
+					) }
 				</InspectorControls>,
 				<div key={ 2 } { ...nodeAttributes } />,
 			] );
